@@ -1,147 +1,310 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#10100f">
-<title>SpinLab — Roulette History Analyzer</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#101411">
+<title>SpinLab Premium</title>
 <style>
-:root{--bg:#0b0c0b;--panel:#141614;--panel2:#1b1e1b;--line:#30352f;--gold:#d8b45a;--gold2:#f0d88d;--muted:#9da398;--text:#f4f2e9;--green:#83c99a;--red:#e47777}
-*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 80% -10%,#292315 0,transparent 38%),var(--bg);color:var(--text);font:14px/1.5 Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif}
-header{padding:22px clamp(16px,4vw,48px);border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;background:#0c0d0cf0;position:sticky;top:0;z-index:5;backdrop-filter:blur(12px)}
-.brand{display:flex;align-items:center;gap:12px}.logo{width:42px;height:42px;border:1px solid var(--gold);border-radius:13px;display:grid;place-items:center;color:var(--gold);font-size:21px}.brand h1{font-size:20px;letter-spacing:2px;margin:0}.brand small{color:var(--muted);letter-spacing:1.4px;text-transform:uppercase;font-size:10px}
-nav{display:flex;gap:7px;flex-wrap:wrap}button,.filebtn{border:1px solid var(--line);background:var(--panel2);color:var(--text);padding:9px 13px;border-radius:9px;cursor:pointer;font:inherit}button:hover,.filebtn:hover{border-color:var(--gold);color:var(--gold2)}button.primary{background:linear-gradient(135deg,#e2c36e,#a77c2c);color:#17140b;border:0;font-weight:750}button.danger{color:#f09b9b}button:disabled{opacity:.4;cursor:not-allowed}
-main{max-width:1450px;margin:auto;padding:26px clamp(14px,3vw,38px) 55px}.eyebrow{color:var(--gold);text-transform:uppercase;letter-spacing:2px;font-size:10px;font-weight:800}.hero{display:flex;justify-content:space-between;gap:18px;align-items:end;margin-bottom:22px}.hero h2{font-size:clamp(25px,4vw,38px);margin:5px 0}.hero p{margin:0;color:var(--muted)}.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:14px}.card{background:linear-gradient(145deg,#181b18,#111311);border:1px solid var(--line);border-radius:15px;padding:17px;min-width:0}.span12{grid-column:span 12}.span8{grid-column:span 8}.span7{grid-column:span 7}.span6{grid-column:span 6}.span5{grid-column:span 5}.span4{grid-column:span 4}.card h3{font-size:14px;margin:0 0 13px;letter-spacing:.3px}.sub{color:var(--muted);font-size:12px}.metric{font-size:29px;font-weight:750;letter-spacing:-1px}.metric.gold{color:var(--gold2)}.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:14px}.metricbox{background:#171a17;border:1px solid var(--line);border-radius:13px;padding:14px}.metricbox label{display:block;color:var(--muted);font-size:11px;margin-bottom:4px}
-.entry{display:flex;gap:9px;flex-wrap:wrap}.entry input,.field input,.field select{background:#0d0f0d;border:1px solid var(--line);border-radius:9px;padding:10px;color:var(--text);font:inherit;min-width:0}.entry input{width:110px;font-size:18px}.field{display:flex;flex-direction:column;gap:6px;margin:8px 0}.field label{font-size:11px;color:var(--muted)}.field input,.field select{width:100%}.chips{display:flex;gap:7px;flex-wrap:wrap;margin-top:12px}.chip{border:1px solid var(--line);padding:5px 9px;border-radius:20px;color:var(--muted);font-size:11px}
-.balls{display:flex;flex-wrap:wrap;gap:7px;max-height:150px;overflow:auto;margin-top:13px}.ball{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-weight:750;font-size:12px;border:1px solid #ffffff20}.ball.red{background:#a82d34}.ball.black{background:#202321;border-color:#596057}.ball.green{background:#1b7952}
-.statrow{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid #292e29}.statrow:last-child{border:0}.bar{height:7px;background:#292e29;border-radius:9px;overflow:hidden;margin-top:5px}.bar i{display:block;height:100%;background:linear-gradient(90deg,#94702e,var(--gold2));border-radius:9px}
-.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}.pill{font-size:11px;padding:4px 8px;border-radius:6px;background:#28261d;color:var(--gold2)}.pattern{padding:10px;border:1px solid var(--line);border-radius:10px;margin:7px 0}.pattern strong{color:var(--gold2)}.pattern small{color:var(--muted);display:block}.tablewrap{overflow:auto}table{border-collapse:collapse;width:100%;font-size:12px}td,th{text-align:left;padding:9px;border-bottom:1px solid var(--line)}th{color:var(--muted);font-weight:600}
-canvas{width:100%;height:210px;display:block}.wheel{display:grid;grid-template-columns:repeat(12,1fr);gap:4px}.wheel .ball{width:100%;height:auto;aspect-ratio:1;font-size:10px}.notice{border-left:3px solid var(--gold);padding:10px 12px;background:#211e15;color:#d8cfb7;border-radius:5px;font-size:12px;margin:14px 0}.hidden{display:none!important}.section{scroll-margin-top:95px;margin-bottom:16px}
-footer{color:var(--muted);font-size:11px;text-align:center;padding:25px}
-@media(max-width:850px){.span8,.span7,.span6,.span5,.span4{grid-column:span 12}.metrics{grid-template-columns:repeat(2,1fr)}header{position:static}.hero{align-items:start;flex-direction:column}}
-@media(max-width:430px){nav button{padding:7px 9px;font-size:12px}.metrics{gap:8px}.metric{font-size:24px}.card{padding:13px}.wheel{grid-template-columns:repeat(9,1fr)}}
-
-.combo-toolbar{display:flex;gap:9px;flex-wrap:wrap;align-items:center;margin:10px 0}.combo-toolbar input,.combo-toolbar select{background:#171a16;border:1px solid var(--line);color:var(--text);padding:9px 11px;border-radius:8px;min-width:100px}.combo-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin-top:12px}.combo-card{background:#111410;border:1px solid var(--line);border-radius:10px;padding:11px;min-width:0}.combo-card strong{display:block;color:var(--gold2);font-size:13px}.combo-card small{display:block;color:var(--muted);margin-top:5px;line-height:1.4}.combo-card .status{margin-top:8px;font-size:11px;color:var(--green)}.combo-card .miss{color:#e6a1a1}.roulette-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;margin-top:12px}.roulette-grid .ball{width:100%;height:auto;aspect-ratio:1;border-radius:7px}.roulette-grid .ball.hit{outline:3px solid var(--gold2);box-shadow:0 0 0 2px #000}.combo-legend{font-size:11px;color:var(--muted);margin-top:8px}.combo-foot{font-size:12px;color:var(--muted);margin-top:10px}
-@media(max-width:540px){.combo-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
-</style></head>
+:root {
+ --bg:#0b0e0c;--panel:#151b17;--panel2:#1c241e;
+ --line:#303b32;--text:#f1f5ef;--muted:#9aa99d;
+ --gold:#d6b66b;--green:#267c4b;--red:#bd4141;
+}
+*{box-sizing:border-box}
+body{
+ margin:0;background:var(--bg);color:var(--text);
+ font-family:Arial,sans-serif;padding:16px;
+}
+header{padding:12px 0 20px}
+h1{margin:0;color:var(--gold);font-size:27px;letter-spacing:2px}
+.sub{color:var(--muted);font-size:12px;margin-top:7px}
+.panel{
+ background:var(--panel);border:1px solid var(--line);
+ border-radius:14px;padding:15px;margin-bottom:15px;
+}
+h2{font-size:15px;color:var(--gold);margin:0 0 13px}
+h3{font-size:13px;margin:13px 0 8px;color:var(--gold)}
+button{
+ background:var(--panel2);color:var(--text);
+ border:1px solid var(--line);border-radius:9px;
+ padding:10px 12px;font-weight:bold;cursor:pointer;
+}
+button:active{opacity:.7}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+.table{
+ display:grid;grid-template-columns:repeat(6,1fr);gap:5px;
+}
+.num{padding:13px 2px;font-size:14px}
+.zero{background:var(--green);grid-column:span 6}
+.red{background:#9e3333}
+.black{background:#252a27}
+.history{display:flex;flex-wrap:wrap;gap:6px}
+.ball{
+ width:34px;height:34px;border-radius:50%;
+ display:grid;place-items:center;font-weight:bold;
+ border:1px solid #ffffff22;
+}
+.ball.green{background:var(--green)}
+.ball.red{background:var(--red)}
+.ball.black{background:#252a27}
+.stats{
+ display:grid;grid-template-columns:repeat(2,1fr);gap:9px;
+}
+.stat{background:var(--panel2);padding:12px;border-radius:10px}
+.stat small{display:block;color:var(--muted);margin-bottom:6px}
+.stat strong{font-size:21px;color:var(--gold)}
+.muted{color:var(--muted);font-size:12px}
+.row{display:flex;justify-content:space-between;gap:10px;margin:9px 0}
+.bar{height:7px;background:#29332c;border-radius:8px;overflow:hidden}
+.fill{height:100%;background:var(--gold)}
+.combo{padding:10px 0;border-bottom:1px solid var(--line)}
+.combo:last-child{border:0}
+input[type=file]{max-width:100%;color:var(--muted)}
+footer{text-align:center;color:var(--muted);font-size:11px;padding:20px}
+</style>
+</head>
 <body>
-<header><div class="brand"><div class="logo">✦</div><div><h1>SPINLAB</h1><small>Roulette history intelligence</small></div></div><nav><button onclick="go('overview')">Dashboard</button><button onclick="go('patterns')">Patterns</button><button onclick="go('statistics')">Statistics</button><button onclick="go('data')">Data</button></nav></header>
-<main>
-<section class="hero"><div><div class="eyebrow">European roulette · 0–36</div><h2>Read the history. <span style="color:var(--gold)">Understand the patterns.</span></h2><p>Explore recorded spins with a clean, session-based analysis workspace.</p></div><div class="pill" id="sessionCount">0 spins in session</div></section>
-<section id="overview" class="section">
-<div class="metrics">
-<div class="metricbox"><label>Total recorded spins</label><div class="metric gold" id="total">0</div></div><div class="metricbox"><label>Unique numbers</label><div class="metric" id="unique">0</div></div><div class="metricbox"><label>Most frequent</label><div class="metric" id="hot">—</div></div><div class="metricbox"><label>Longest same-colour streak</label><div class="metric" id="longest">0</div></div>
-</div>
-<div class="grid">
-<div class="card span7"><h3>Enter a result</h3><div class="entry"><input id="numberInput" type="number" min="0" max="36" placeholder="0–36" inputmode="numeric"><button class="primary" onclick="addSpin()">＋ Add spin</button><button onclick="undo()">Undo</button></div><div class="chips"><span class="chip">Enter key adds result</span><span class="chip">0 = green</span><span class="chip">Latest result first</span></div><div class="balls" id="recent"></div></div>
-<div class="card span5"><h3>Outside bet distribution · historical</h3><div id="outside"></div><div class="notice">Percentages describe your entered history only. Each roulette spin is independent; past results do not make a future outcome more likely.</div></div>
-<div class="card span6"><h3>Number frequency · 0–36</h3><canvas id="freqChart" width="700" height="230"></canvas></div>
-<div class="card span6"><h3>Recent-window distribution</h3><div class="two" id="windows"></div></div>
-</div></section>
-<section id="patterns" class="section">
-<div class="eyebrow">Pattern laboratory</div><h2 style="margin:4px 0 14px">Automatic pattern detection</h2>
-<div class="grid"><div class="card span7"><h3>Detected in recent sequence</h3><div id="patternResults"></div></div>
-<div class="card span5"><h3>Custom pattern creator</h3><p class="sub">Enter a sequence of values to find exact consecutive matches in the history.</p><div class="field"><label>Pattern (comma-separated numbers)</label><input id="customPattern" placeholder="e.g. 7, 12, 7"></div><button class="primary" onclick="findCustom()">Find pattern</button><div id="customResult" class="sub" style="margin-top:12px"></div></div>
-<div class="card span12"><h3>Screenshot Combo Pattern Finder</h3>
-<p class="sub">Checks the combo groups from your screenshots against the results you entered. Combo groups are checked as co-occurrences in the selected recent window; sequence patterns require the exact order in consecutive spins.</p>
-<div class="combo-toolbar"><label class="sub" for="comboWindow">History window</label><select id="comboWindow" onchange="renderComboFinder()"><option value="10">Last 10</option><option value="20" selected>Last 20</option><option value="30">Last 30</option><option value="50">Last 50</option><option value="100">Last 100</option><option value="all">All results</option></select></div>
-<div id="comboResults" class="combo-grid"><span class="sub">Enter roulette results to check the screenshot combos.</span></div>
-<h3 style="margin-top:18px">Combo numbers on roulette layout</h3><div id="comboRoulette" class="roulette-grid"></div><div class="combo-legend">Gold outline = number included in at least one screenshot combo currently being checked.</div>
-<h3 style="margin-top:18px">Create your own combo</h3><div class="combo-toolbar"><input id="comboName" placeholder="Combo name"><input id="comboNumbers" placeholder="e.g. 7, 8, 6"><button class="primary" onclick="addCustomCombo()">Check combo</button></div><div id="customComboResult" class="sub">Enter 2 or more numbers from 0 to 36.</div>
-<p class="combo-foot">The screenshot labels “123 Combo” and “143 Combo” do not show a reliably readable list of roulette numbers, so they are kept as chart labels rather than guessed number rules. You can enter their number groups above. Pattern matches describe past entries and do not predict or improve the odds of the next spin.</p>
-</div>
-<div class="card span12"><h3>Pattern guide</h3><div class="two"><div><div class="pattern"><strong>Repeating / 1-cut / 2-cut</strong><small>Repeated identical values, including repeats with one or two intervening results.</small></div><div class="pattern"><strong>Bracket & mirror</strong><small>Symmetric value shapes and mirrored numeric sequences.</small></div></div><div><div class="pattern"><strong>1:2:1 and 2:1:2</strong><small>Three-part group shapes, detected on red/black, odd/even and high/low classifications.</small></div><div class="pattern"><strong>Consecutive sequences</strong><small>Runs of neighbouring numeric values in ascending or descending order.</small></div></div></div></div></div>
+
+<header>
+ <h1>SPINLAB</h1>
+ <div class="sub">PREMIUM ROULETTE HISTORY ANALYZER</div>
+</header>
+
+<section class="panel">
+ <h2>EUROPEAN ROULETTE TABLE</h2>
+ <div class="table" id="roulette"></div>
+ <p class="muted">Tap a number to add it to your recorded history.</p>
 </section>
-<section id="statistics" class="section">
-<div class="eyebrow">Deep statistics</div><h2 style="margin:4px 0 14px">Numbers & wheel context</h2>
-<div class="grid"><div class="card span6"><h3>Hot & cold numbers</h3><div class="two"><div><div class="sub">HOT</div><div id="hotList"></div></div><div><div class="sub">COLD / NOT SEEN</div><div id="coldList"></div></div></div></div>
-<div class="card span6"><h3>Missing numbers</h3><div id="missing"></div><h3 style="margin-top:15px">Longest & current streaks</h3><div id="streaks"></div></div>
-<div class="card span6"><h3>12 horizontal rows · 3 columns · 3 dozens</h3><div id="layoutStats"></div></div>
-<div class="card span6"><h3>European wheel neighbours</h3><p class="sub">Neighbours of the latest entered number on the standard European wheel order.</p><div id="neighbours"></div></div>
-<div class="card span12"><h3>Last 10 / 20 / 50 / 100 results</h3><div class="tablewrap"><table><thead><tr><th>Window</th><th>Count</th><th>Red</th><th>Black</th><th>Green</th><th>Odd</th><th>Even</th><th>High</th><th>Low</th></tr></thead><tbody id="windowTable"></tbody></table></div></div></div>
+
+<section class="panel">
+ <h2>HISTORY CONTROLS</h2>
+ <div class="actions">
+  <button onclick="undo()">UNDO LAST</button>
+  <button onclick="clearHistory()">CLEAR HISTORY</button>
+  <button onclick="exportCSV()">EXPORT CSV</button>
+ </div>
+ <h3>IMPORT CSV</h3>
+ <input type="file" accept=".csv,.txt" onchange="importCSV(event)">
+ <h3>RECENT RESULTS</h3>
+ <div class="history" id="history"></div>
+ <p class="muted" id="count">0 recorded results</p>
 </section>
-<section id="data" class="section">
-<div class="eyebrow">Session & storage</div><h2 style="margin:4px 0 14px">Manage your data</h2><div class="grid">
-<div class="card span6"><h3>Import / export</h3><p class="sub">CSV should contain roulette numbers from 0 to 36. Import accepts comma, semicolon or newline-separated values.</p><div class="entry"><label class="filebtn">Upload CSV <input id="csvFile" type="file" accept=".csv,text/csv" hidden onchange="importCSV(event)"></label><button onclick="downloadCSV()">Download CSV</button></div><div id="csvStatus" class="sub" style="margin-top:10px"></div></div>
-<div class="card span6"><h3>Save & restore</h3><p class="sub">Save this session in this browser, then restore it later on this device.</p><div class="entry"><button class="primary" onclick="saveSession()">Save session</button><button onclick="restoreSession()">Restore saved</button><button class="danger" onclick="resetSession()">Reset session</button></div><div id="saveStatus" class="sub" style="margin-top:10px"></div></div>
-<div class="card span6"><h3>Session comparison</h3><p class="sub">Compare the current session with the last saved snapshot.</p><div id="comparison"></div></div>
-<div class="card span6"><h3>Custom analysis alerts</h3><p class="sub">Set a threshold to highlight when a number has appeared at least this many times in the current session.</p><div class="entry"><input id="alertNumber" type="number" min="0" max="36" placeholder="Number"><input id="alertThreshold" type="number" min="1" value="3" style="width:85px"><button onclick="checkAlert()">Check alert</button></div><div id="alertResult" class="sub" style="margin-top:10px"></div></div>
-</div></section>
-<footer>SPINLAB · Historical analysis tool · European wheel (single zero)<br>Not a prediction engine. Roulette outcomes are random and independent.</footer>
-</main>
+
+<section class="panel">
+ <h2>HISTORICAL STATISTICS</h2>
+ <div class="stats">
+  <div class="stat"><small>Total results</small><strong id="total">0</strong></div>
+  <div class="stat"><small>Zero results</small><strong id="zeros">0</strong></div>
+  <div class="stat"><small>Red results</small><strong id="reds">0</strong></div>
+  <div class="stat"><small>Black results</small><strong id="blacks">0</strong></div>
+ </div>
+ <h3>OUTSIDE CATEGORIES</h3>
+ <div id="outside"></div>
+</section>
+
+<section class="panel">
+ <h2>NUMBER FREQUENCY</h2>
+ <div id="frequency"></div>
+</section>
+
+<section class="panel">
+ <h2>COMBOS</h2>
+ <h3>INSIDE NUMBERS</h3>
+ <div id="inside"></div>
+ <h3>CASINO COMBOS</h3>
+ <div id="casino"></div>
+ <h3>INDIAN COMBOS</h3>
+ <div id="indian"></div>
+</section>
+
+<section class="panel">
+ <h2>FON PATTERN REFERENCE</h2>
+ <div id="fon"></div>
+</section>
+
+<footer>
+ SPINLAB PREMIUM · HISTORICAL RECORDS ONLY<br>
+ Past results do not determine future roulette outcomes.
+</footer>
+
 <script>
-const REDS=new Set([1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36]);
-const WHEEL=[0,32,15,19,4,21,2,25,17,34,6,27,13,36,11,30,8,23,10,5,24,16,33,1,20,14,31,9,22,18,29,7,28,12,35,3,26];
-let spins=[];let saved=[];
-const $=id=>document.getElementById(id);
-const color=n=>n===0?'green':REDS.has(n)?'red':'black';
-const parity=n=>n===0?'Zero':n%2?'Odd':'Even';
-const high=n=>n===0?'Zero':n>=19?'High':'Low';
-const fmt=p=>p.length?(p.length*100/spins.length).toFixed(1)+'%':'0%';
-function go(id){$(id).scrollIntoView({behavior:'smooth'});}
-function ball(n){return `<span class="ball ${color(n)}" title="${n}">${n}</span>`}
-function addSpin(){let v=Number($('numberInput').value);if($('numberInput').value.trim()===''||!Number.isInteger(v)||v<0||v>36){$('csvStatus').textContent='Please enter a whole number from 0 to 36.';return;}spins.unshift(v);$('numberInput').value='';render();}
-function undo(){if(spins.length){spins.shift();render();}}
-$('numberInput').addEventListener('keydown',e=>{if(e.key==='Enter')addSpin()});
-function count(arr,fn){return arr.filter(fn).length}
-function stats(arr){let n=arr.length;return {n,red:count(arr,x=>color(x)==='red'),black:count(arr,x=>color(x)==='black'),green:count(arr,x=>x===0),odd:count(arr,x=>x%2===1),even:count(arr,x=>x!==0&&x%2===0),high:count(arr,x=>x>=19),low:count(arr,x=>x>=1&&x<=18)}}
-function pct(a,b){return b?(a*100/b).toFixed(1)+'%':'—'}
-function streak(fn,arr){let cur=0,best=0;for(let i=arr.length-1;i>=0;i--){if(fn(arr[i])){cur++;best=Math.max(best,cur)}else break;}let longest=0,r=0;for(let i=arr.length-1;i>=0;i--){if(fn(arr[i])){r++;longest=Math.max(longest,r)}else r=0;}return [cur,longest]}
-function render(){let n=spins.length,counts=Array(37).fill(0);spins.forEach(x=>counts[x]++);let sorted=counts.map((v,i)=>({i,v})).sort((a,b)=>b.v-a.v);
-$('total').textContent=n;$('unique').textContent=counts.filter(x=>x).length;$('hot').textContent=n?sorted[0].i:'—';$('sessionCount').textContent=n+' spins in session';
-$('longest').textContent=Math.max(streak(x=>color(x)==='red',spins)[1],streak(x=>color(x)==='black',spins)[1],streak(x=>x===0,spins)[1]);
-$('recent').innerHTML=spins.slice(0,45).map(ball).join('')||'<span class="sub">Your latest results will appear here.</span>';
-let s=stats(spins);$('outside').innerHTML=[['Red',s.red],['Black',s.black],['Green',s.green],['High (19–36)',s.high],['Low (1–18)',s.low],['Odd',s.odd],['Even',s.even]].map(([k,v])=>`<div class="statrow"><span>${k}</span><b>${v} <span class="sub">(${pct(v,n)})</span></b></div>`).join('');
-$('windows').innerHTML=[10,20,50,100].map(w=>{let a=spins.slice(0,w),q=stats(a);return `<div><b>Last ${w}</b><div class="sub">${a.length} recorded</div><div class="bar"><i style="width:${pct(q.red,a.length)}"></i></div><div class="sub">Red ${pct(q.red,a.length)} · Black ${pct(q.black,a.length)}</div><div class="sub">Odd ${pct(q.odd,a.length)} · High ${pct(q.high,a.length)}</div></div>`}).join('');
-$('hotList').innerHTML=sorted.slice(0,6).map(o=>`<div class="statrow"><span>${o.i}</span><b>${o.v}</b></div>`).join('')||'—';
-let cold=counts.map((v,i)=>({i,v})).filter(o=>o.v===0).map(o=>o.i);$('coldList').innerHTML=cold.length?cold.map(x=>ball(x)).join(''):`<span class="sub">Every number has appeared.</span>`;
-$('missing').innerHTML=cold.length?cold.map(x=>ball(x)).join(''):'<span class="sub">No numbers missing.</span>';
-let rc=streak(x=>color(x)===color(spins[0]??-1),spins),odd=streak(x=>x%2===1,spins),hi=streak(x=>x>=19,spins);
-$('streaks').innerHTML=`<div class="statrow"><span>Current ${spins.length?color(spins[0]):'—'} run</span><b>${spins.length?rc[0]:0}</b></div><div class="statrow"><span>Longest same colour</span><b>${Math.max(streak(x=>color(x)==='red',spins)[1],streak(x=>color(x)==='black',spins)[1])}</b></div><div class="statrow"><span>Current odd run</span><b>${odd[0]}</b></div><div class="statrow"><span>Current high run</span><b>${hi[0]}</b></div>`;
-let rows=[...Array(12)].map((_,i)=>spins.filter(x=>x>0&&(x-1)%3===i));let cols=[0,1,2].map(c=>spins.filter(x=>x>0&&x%3===c));let dozens=[0,1,2].map(d=>spins.filter(x=>x>=d*12+1&&x<=(d+1)*12));
-$('layoutStats').innerHTML='<b>Columns</b>'+cols.map((a,i)=>`<div class="statrow"><span>Column ${i+1}</span><b>${a.length} (${pct(a.length,n)})</b></div>`).join('')+'<b>Dozens</b>'+dozens.map((a,i)=>`<div class="statrow"><span>${i+1}${['st','nd','rd'][i]} dozen</span><b>${a.length} (${pct(a.length,n)})</b></div>`).join('')+'<b>12 horizontal rows</b>'+rows.map((a,i)=>`<div class="statrow"><span>Row ${i+1}</span><b>${a.length}</b></div>`).join('');
-let idx=WHEEL.indexOf(spins[0]);$('neighbours').innerHTML=idx<0?'<span class="sub">Add a spin to see its wheel neighbours.</span>':`<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">${ball(WHEEL[(idx+WHEEL.length-2)%37])}${ball(WHEEL[(idx+WHEEL.length-1)%37])}<span class="pill">Latest ${spins[0]}</span>${ball(WHEEL[(idx+1)%37])}${ball(WHEEL[(idx+2)%37])}</div><p class="sub">Two neighbours on each side of the latest number.</p>`;
-$('windowTable').innerHTML=[10,20,50,100].map(w=>{let a=spins.slice(0,w),q=stats(a);return `<tr><td>Last ${w}</td><td>${q.n}</td><td>${pct(q.red,q.n)}</td><td>${pct(q.black,q.n)}</td><td>${pct(q.green,q.n)}</td><td>${pct(q.odd,q.n)}</td><td>${pct(q.even,q.n)}</td><td>${pct(q.high,q.n)}</td><td>${pct(q.low,q.n)}</td></tr>`}).join('');
-drawChart(counts);detectPatterns();renderComboFinder();compare();
-}
-function drawChart(counts){let c=$('freqChart'),ctx=c.getContext('2d'),w=c.width,h=c.height;ctx.clearRect(0,0,w,h);let max=Math.max(1,...counts),gap=5,bw=(w-40)/37;ctx.font='10px sans-serif';for(let i=0;i<37;i++){let bh=(h-35)*counts[i]/max,x=25+i*bw;ctx.fillStyle=i===0?'#56b78a':REDS.has(i)?'#a94449':'#626a61';ctx.fillRect(x,h-23-bh,Math.max(3,bw-gap),bh);ctx.fillStyle='#a9afa5';ctx.fillText(i,x,h-7);}ctx.strokeStyle='#41473f';ctx.beginPath();ctx.moveTo(20,h-23);ctx.lineTo(w-5,h-23);ctx.stroke();}
-function detectPatterns(){let a=spins.slice(0,30).reverse(),out=[];if(a.length<2){$('patternResults').innerHTML='<span class="sub">Add at least two results to detect patterns.</span>';return;}
-let runs=[];for(let i=0;i<a.length;){let j=i+1;while(j<a.length&&a[j]===a[i])j++;if(j-i>=2)runs.push(`${a[i]} repeated ${j-i} times`);i=j;}if(runs.length)out.push(['Repeating patterns',runs.join(' · ')]);
-for(let gap of [2,3]){let found=[];for(let i=0;i+gap<a.length;i++)if(a[i]===a[i+gap])found.push(`${a[i]} _${gap-1===1?'1-cut':'2-cut'}_ ${a[i]}`);if(found.length)out.push([gap===2?'1-cut repeating':'2-cut repeating',found.join(' · ')]);}
-let seq=[];for(let i=0;i+2<a.length;i++){let d1=a[i+1]-a[i],d2=a[i+2]-a[i+1];if(Math.abs(d1)===1&&d1===d2)seq.push(`${a[i]} → ${a[i+1]} → ${a[i+2]}`);if(a[i]===a[i+2])seq.push(`${a[i]} – ${a[i+1]} – ${a[i]} (bracket)`);if(a[i]===37-a[i+2]&&a[i]!==0)seq.push(`${a[i]} ↔ ${a[i+2]} (numeric mirror)`);}if(seq.length)out.push(['Bracket / mirror / consecutive',seq.join(' · ')]);
-for(let [label,fn] of [['Red/Black',x=>color(x)],['Odd/Even',x=>x===0?'0':x%2?'Odd':'Even'],['High/Low',x=>x===0?'0':x>=19?'High':'Low']]){let cats=a.map(fn);for(let i=0;i+2<cats.length;i++){let p=cats.slice(i,i+3);if(p[0]===p[2]&&p[0]!==p[1]){out.push(['1:2:1 / 2:1:2',`${label}: ${p.join(' : ')} at recent sequence position ${i+1}`]);break;}}}
-$('patternResults').innerHTML=out.length?out.map(([h,t])=>`<div class="pattern"><strong>${h}</strong><small>${t}</small></div>`).join(''):'<span class="sub">No listed pattern found in the latest 30 results.</span>';
-}
-const screenshotCombos=[
- {name:'22/27/24/29 Combo',nums:[22,27,24,29],mode:'set',note:'All four numbers appear in the selected history window.'},
- {name:'22/27/24/29 · 1-Cut Combo',nums:[22,27,24,29],mode:'cut',note:'Numbers appear in this order, allowing up to one result between each number.'},
- {name:'9/11 Combo',nums:[9,11],mode:'set'},
- {name:'2/22 Combo',nums:[2,22],mode:'set'},
- {name:'7/17 Combo',nums:[7,17],mode:'set'},
- {name:'17/31 Combo',nums:[17,31],mode:'set'},
- {name:'12→13 Sequence',nums:[12,13],mode:'sequence'},
- {name:'5/8 Combo',nums:[5,8],mode:'set'},
- {name:'6/8 Combo',nums:[6,8],mode:'set'},
- {name:'7-8-6 Combo',nums:[7,8,6],mode:'set'}
+const redNumbers=[
+ 1,3,5,7,9,12,14,16,18,
+ 19,21,23,25,27,30,32,34,36
 ];
-let userCombos=[];
-function comboWindow(){let v=$('comboWindow')?.value||'20';return v==='all'?spins.slice():spins.slice(0,Number(v));}
-function comboMatch(combo,a){
- if(combo.mode==='sequence'){for(let i=0;i<a.length-1;i++)if(a[i]===combo.nums[0]&&a[i+1]===combo.nums[1])return {ok:true,detail:'Exact consecutive sequence found.'};return {ok:false,detail:'Waiting for '+combo.nums.join(' → ')+' in consecutive spins.'};}
- if(combo.mode==='cut'){let chronological=a.slice().reverse();for(let i=0;i<chronological.length;i++){let pos=i,ok=chronological[pos]===combo.nums[0];for(let k=1;k<combo.nums.length&&ok;k++){let found=-1;for(let j=pos+1;j<=Math.min(pos+2,chronological.length-1);j++)if(chronological[j]===combo.nums[k]){found=j;break;}if(found<0)ok=false;else pos=found;}if(ok)return {ok:true,detail:'Ordered 1-cut match found (maximum one spin skipped between members).'};}return {ok:false,detail:'Ordered 1-cut sequence not found in this window.'};}
- let missing=combo.nums.filter(n=>!a.includes(n));return {ok:missing.length===0,detail:missing.length?'Missing in window: '+missing.join(', '):'All combo numbers appeared in this window.'};
+
+let results=[];
+
+function colour(n){
+ if(n===0)return "green";
+ return redNumbers.includes(n)?"red":"black";
 }
-function renderComboFinder(){let host=$('comboResults');if(!host)return;let a=comboWindow(),all=[...screenshotCombos,...userCombos],used=new Set();if(!spins.length){host.innerHTML='<span class="sub">Enter roulette results to check the screenshot combos.</span>';$('comboRoulette').innerHTML=Array.from({length:37},(_,n)=>ball(n)).join('');return;}
- host.innerHTML=all.map(c=>{let r=comboMatch(c,a);if(r.ok)c.nums.forEach(n=>used.add(n));return `<div class="combo-card"><strong>${c.name}</strong><small>Numbers: ${c.nums.join(' · ')}</small><div class="status ${r.ok?'':'miss'}">${r.ok?'✓ MATCH IN HISTORY':'Not matched yet'}</div><small>${r.detail}</small></div>`;}).join('');
- $('comboRoulette').innerHTML=Array.from({length:37},(_,n)=>`<span class="ball ${color(n)} ${used.has(n)?'hit':''}" title="${n}">${n}</span>`).join('');
+
+function buildTable(){
+ const table=document.getElementById("roulette");
+ const zero=document.createElement("button");
+ zero.className="num zero";
+ zero.textContent="0";
+ zero.onclick=()=>addResult(0);
+ table.appendChild(zero);
+
+ for(let n=1;n<=36;n++){
+  const b=document.createElement("button");
+  b.className="num "+colour(n);
+  b.textContent=n;
+  b.onclick=()=>addResult(n);
+  table.appendChild(b);
+ }
 }
-function addCustomCombo(){let name=$('comboName').value.trim()||'My custom combo',raw=$('comboNumbers').value.split(/[ ,;]+/).filter(Boolean),nums=raw.map(Number);if(nums.length<2||nums.some(n=>!Number.isInteger(n)||n<0||n>36)||new Set(nums).size!==nums.length){$('customComboResult').textContent='Enter at least two different whole numbers from 0 to 36.';return;}userCombos.push({name,nums,mode:'set'});$('customComboResult').textContent='Added '+name+' to the combo checker.';$('comboName').value='';$('comboNumbers').value='';renderComboFinder();}
-function findCustom(){let p=$('customPattern').value.split(/[,\s;]+/).filter(x=>x!=='').map(Number);if(!p.length||p.some(x=>!Number.isInteger(x)||x<0||x>36)){$('customResult').textContent='Enter valid numbers from 0 to 36.';return;}let arr=spins.slice().reverse(),hits=[];for(let i=0;i<=arr.length-p.length;i++)if(p.every((v,j)=>arr[i+j]===v))hits.push(i+1);$('customResult').textContent=hits.length?`Found ${hits.length} exact match(es). Sequence positions from oldest: ${hits.join(', ')}.`:'No exact matches found in this session.';}
-function saveSession(){localStorage.setItem('spinlab_session',JSON.stringify(spins));localStorage.setItem('spinlab_saved_at',new Date().toLocaleString());$('saveStatus').textContent='Saved '+spins.length+' spins on this device.';compare();}
-function restoreSession(){let v=localStorage.getItem('spinlab_session');if(!v){$('saveStatus').textContent='No saved session found on this device.';return;}try{spins=JSON.parse(v);render();$('saveStatus').textContent='Restored '+spins.length+' spins.';}catch(e){$('saveStatus').textContent='Saved data could not be read.';}}
-function resetSession(){if(!confirm('Reset the current session? Save a copy first if you need it.'))return;spins=[];render();$('saveStatus').textContent='Current session reset. Saved snapshot is unchanged.';}
-function downloadCSV(){let csv='number\n'+spins.slice().reverse().join('\n'),blob=new Blob([csv],{type:'text/csv'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='spinlab-history.csv';a.click();URL.revokeObjectURL(a.href);}
-function importCSV(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{let vals=String(r.result).split(/[,\s;]+/).map(x=>x.trim()).filter(x=>x!==''&&!/^number$/i.test(x)).map(Number);if(!vals.length||vals.some(x=>!Number.isInteger(x)||x<0||x>36)){$('csvStatus').textContent='CSV not imported: use only whole numbers from 0 to 36.';return;}spins=vals.reverse().concat(spins);render();$('csvStatus').textContent=`Imported ${vals.length} results. Newest result is first in the session.`;};r.readAsText(f);e.target.value='';}
-function compare(){let old=JSON.parse(localStorage.getItem('spinlab_session')||'[]'),a=stats(spins),b=stats(old);$('comparison').innerHTML=`<div class="statrow"><span>Current session</span><b>${a.n} spins</b></div><div class="statrow"><span>Saved snapshot</span><b>${b.n} spins</b></div><div class="statrow"><span>Red share · current / saved</span><b>${pct(a.red,a.n)} / ${pct(b.red,b.n)}</b></div><div class="statrow"><span>Black share · current / saved</span><b>${pct(a.black,a.n)} / ${pct(b.black,b.n)}</b></div><div class="sub" style="margin-top:8px">${localStorage.getItem('spinlab_saved_at')||'No saved timestamp'}</div>`;}
-function checkAlert(){let n=Number($('alertNumber').value),t=Number($('alertThreshold').value);if(!Number.isInteger(n)||n<0||n>36||!Number.isInteger(t)||t<1){$('alertResult').textContent='Enter a number from 0–36 and a positive threshold.';return;}let c=spins.filter(x=>x===n).length;$('alertResult').textContent=c>=t?`Alert: ${n} appeared ${c} times (threshold ${t}).`:`${n} appeared ${c} time(s); below threshold ${t}.`;}
+
+function addResult(n){
+ results.push(n);
+ render();
+}
+
+function undo(){
+ results.pop();
+ render();
+}
+
+function clearHistory(){
+ if(confirm("Clear all recorded results?")){
+  results=[];
+  render();
+ }
+}
+
+function percentage(a,total){
+ return total?((a/total)*100).toFixed(1)+"%":"0%";
+}
+
+function render(){
+ const total=results.length;
+ const reds=results.filter(n=>colour(n)==="red").length;
+ const blacks=results.filter(n=>colour(n)==="black").length;
+ const zeros=results.filter(n=>n===0).length;
+
+ document.getElementById("total").textContent=total;
+ document.getElementById("reds").textContent=reds;
+ document.getElementById("blacks").textContent=blacks;
+ document.getElementById("zeros").textContent=zeros;
+ document.getElementById("count").textContent=
+  total+" recorded results";
+
+ document.getElementById("history").innerHTML=
+  results.slice().reverse().map(n=>
+   `<span class="ball ${colour(n)}">${n}</span>`
+  ).join("");
+
+ const categories=[
+  ["Red",reds],["Black",blacks],
+  ["Odd",results.filter(n=>n!==0&&n%2===1).length],
+  ["Even",results.filter(n=>n!==0&&n%2===0).length],
+  ["1–18",results.filter(n=>n>=1&&n<=18).length],
+  ["19–36",results.filter(n=>n>=19&&n<=36).length],
+  ["Zero",zeros]
+ ];
+
+ document.getElementById("outside").innerHTML=
+ categories.map(([name,count])=>`
+ <div class="row">
+  <span>${name}</span>
+  <strong>${count} · ${percentage(count,total)}</strong>
+ </div>
+ <div class="bar"><div class="fill" style="width:${percentage(count,total)}"></div></div>
+ `).join("");
+
+ let freq=[];
+ for(let n=0;n<=36;n++){
+  const count=results.filter(x=>x===n).length;
+  freq.push({n,count});
+ }
+ freq.sort((a,b)=>b.count-a.count||a.n-b.n);
+
+ document.getElementById("frequency").innerHTML=
+ freq.map(x=>`
+ <div class="row">
+  <span>${x.n} (${colour(x.n)})</span>
+  <strong>${x.count}</strong>
+ </div>
+ `).join("");
+}
+
+const inside=[
+ ["786","34-21-15 / 6-35-34"],
+ ["789","25-17-36 / 27-17-25"],
+ ["123","12-31 / 17-32"],
+ ["143","6-22-21 / 30-31-33"],
+ ["100","24-0-19 / 5-14-33"]
+];
+
+const casino=[
+ ["2/21","2-7 group + 21 real face (11-21)"],
+ ["2/22","2-7 group + 22 real face (11-22)"],
+ ["34/12","34 and 12 real face (34-21)"],
+ ["7/17","2-7 group + 17 real face (7-17)"],
+ ["31/17","31 and 17 real face (13-17)"],
+ ["6/8","1-6 group + 3-8 group (1-35)"],
+ ["5/8","5-0-10 group + 3-8 group (10-35)"],
+ ["9/11","4-9 group + 11 real face (11-22)"]
+];
+
+const indian=[
+ ["6/16/26","6, 16, 26"],
+ ["4/14/24","4, 14, 24"],
+ ["22/27/24/29","22, 27, 24, 29"]
+];
+
+function showList(id,list){
+ document.getElementById(id).innerHTML=list.map(
+  ([name,description])=>`
+   <div class="combo">
+    <strong>${name}</strong>
+    <div class="muted">${description}</div>
+   </div>`
+ ).join("");
+}
+
+showList("inside",inside);
+showList("casino",casino);
+showList("indian",indian);
+
+const fon=[
+ ["Repeating","55555","5, 10, 23, 32, 14"],
+ ["1 Cut Repeating","5*5*5*5","14, 34, 5, 33, 10"],
+ ["Bracket","5**5 / 5***5","23, 31, 24, 14"],
+ ["1:2:1","5*5**5","See original pattern examples"]
+];
+
+showList("fon",fon);
+
+function exportCSV(){
+ const csv="Result\n"+results.join("\n");
+ const blob=new Blob([csv],{type:"text/csv"});
+ const url=URL.createObjectURL(blob);
+ const a=document.createElement("a");
+ a.href=url;
+ a.download="spinlab-history.csv";
+ a.click();
+ URL.revokeObjectURL(url);
+}
+
+function importCSV(event){
+ const file=event.target.files[0];
+ if(!file)return;
+ const reader=new FileReader();
+ reader.onload=()=>{
+  const nums=reader.result.match(/\b(?:[0-9]|[12][0-9]|3[0-6])\b/g)||[];
+  results=nums.map(Number);
+  render();
+ };
+ reader.readAsText(file);
+}
+
+buildTable();
 render();
-</script></body></html>
+</script>
+</body>
+</html>
