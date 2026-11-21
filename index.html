@@ -4,349 +4,427 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#101411">
+<meta name="theme-color" content="#0b0e0c">
 <title>SpinLab Premium</title>
+
 <style>
-:root{
- --bg:#0b0e0c;--panel:#151b17;--panel2:#1c241e;
- --line:#303b32;--text:#f1f5f1;--muted:#9aa99d;
- --gold:#d6b66b;--green:#267c4b;--red:#a83232;
-}
 *{box-sizing:border-box}
 body{
- margin:0;background:var(--bg);color:var(--text);
- font-family:Arial,sans-serif;padding-bottom:30px
+ margin:0;background:#0b0e0c;color:#edf3ed;
+ font-family:Arial,sans-serif;padding:16px
 }
-header{padding:22px 16px 12px}
-h1{margin:0;color:var(--gold);font-size:27px;letter-spacing:2px}
-.sub{color:var(--muted);font-size:12px;margin-top:7px}
-main{padding:0 12px;max-width:850px;margin:auto}
+.container{max-width:900px;margin:auto}
+header{padding:15px 0}
+h1{margin:0;color:#d8bd78;letter-spacing:2px}
+.sub{color:#8b978d;font-size:12px;margin-top:7px}
 .panel{
- background:var(--panel);border:1px solid var(--line);
- border-radius:14px;padding:14px;margin:12px 0
+ background:#151b17;border:1px solid #29332b;
+ border-radius:14px;padding:16px;margin:14px 0
 }
-h2{font-size:15px;color:var(--gold);margin:0 0 12px}
-h3{font-size:13px;color:var(--gold);margin:15px 0 8px}
-.muted{color:var(--muted);font-size:12px;line-height:1.5}
+h2{font-size:15px;color:#d8bd78;margin-top:0}
+.grid{
+ display:grid;grid-template-columns:repeat(3,1fr);gap:8px
+}
 button{
- background:var(--panel2);color:var(--text);
- border:1px solid var(--line);border-radius:9px;
- padding:10px 12px;font-weight:bold;cursor:pointer
+ background:#222b24;color:white;border:1px solid #39463b;
+ border-radius:9px;padding:12px;font-size:15px;
+ cursor:pointer
 }
 button:active{opacity:.7}
-.actions{display:flex;gap:8px;flex-wrap:wrap}
-.table{
- display:grid;grid-template-columns:repeat(6,1fr);gap:6px
+.numgrid{
+ display:grid;grid-template-columns:repeat(6,1fr);gap:7px
 }
 .num{
- padding:13px 2px;font-size:14px;border-radius:8px;
- border:1px solid #ffffff20;font-weight:bold
+ font-weight:bold;min-height:43px
 }
-.zero{background:var(--green);grid-column:span 6}
-.red{background:#a83232}
-.black{background:#252a27}
-.history{display:flex;flex-wrap:wrap;gap:6px}
-.ball{
- width:34px;height:34px;border-radius:50%;
- display:grid;place-items:center;font-weight:bold;
- border:1px solid #ffffff55;font-size:12px
+.green{background:#087d47}
+.red{background:#a52832}
+.black{background:#202522}
+.zero{background:#087d47}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.actions button{flex:1}
+.stats{
+ display:grid;grid-template-columns:repeat(2,1fr);gap:9px
 }
-.ball.green{background:var(--green)}
-.ball.red{background:var(--red)}
-.ball.black{background:#252a27}
-.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
-.stat{background:var(--panel2);padding:12px;border-radius:10px}
-.stat small{display:block;color:var(--muted)}
-.stat strong{display:block;font-size:20px;color:var(--gold);margin-top:5px}
-.row{
- display:flex;justify-content:space-between;gap:10px;
- padding:8px 0;border-bottom:1px solid var(--line);font-size:13px
+.stat{
+ background:#202921;padding:12px;border-radius:10px
 }
-.row:last-child{border:0}
-.tag{
- display:inline-block;padding:5px 8px;border-radius:7px;
- background:var(--panel2);margin:3px;font-size:12px
+.stat small{color:#9ba99d}
+.stat strong{
+ display:block;font-size:21px;margin-top:6px;color:#e5cb86
 }
-.pattern{padding:10px 0;border-bottom:1px solid var(--line)}
-.pattern:last-child{border:0}
-.pattern strong{color:var(--gold)}
-input[type=file]{max-width:100%;color:var(--muted)}
-footer{text-align:center;color:var(--muted);font-size:11px;padding:20px}
+.history{
+ display:flex;flex-wrap:wrap;gap:6px;
+ max-height:180px;overflow:auto
+}
+.history span{
+ padding:8px 10px;border-radius:7px;font-weight:bold
+}
+.muted{color:#8e9b90;font-size:12px}
+footer{text-align:center;color:#68766b;font-size:11px;padding:20px}
 </style>
 </head>
+
 <body>
+<div class="container">
+
 <header>
- <h1>SPINLAB</h1>
- <div class="sub">PREMIUM ROULETTE HISTORY ANALYSER</div>
+<h1>SPINLAB</h1>
+<div class="sub">PREMIUM ROULETTE HISTORY ANALYZER</div>
 </header>
 
-<main>
-<section class="panel">
- <h2>EUROPEAN ROULETTE TABLE</h2>
- <div class="table" id="roulette"></div>
- <p class="muted">Tap a number to add it to your recorded history.</p>
-</section>
+<div class="panel">
+<h2>ADD ROULETTE RESULT</h2>
+<div class="numgrid" id="numberTable"></div>
+<div class="actions">
+<button onclick="undo()">UNDO</button>
+<button onclick="exportData()">EXPORT</button>
+<button onclick="resetAll()">RESET</button>
+</div>
+</div>
 
-<section class="panel">
- <h2>HISTORY CONTROLS</h2>
- <div class="actions">
-  <button onclick="undo()">UNDO</button>
-  <button onclick="clearHistory()">CLEAR HISTORY</button>
-  <button onclick="exportCSV()">EXPORT CSV</button>
- </div>
- <p class="muted" id="total">Total recorded: 0</p>
- <div class="history" id="history"></div>
- <p class="muted">Import previous results:</p>
- <input type="file" accept=".csv,.txt" onchange="importCSV(event)">
-</section>
+<div class="panel">
+<h2>LIVE DASHBOARD</h2>
+<div class="stats">
+<div class="stat"><small>Total Spins</small><strong id="total">0</strong></div>
+<div class="stat"><small>Last Result</small><strong id="last">-</strong></div>
+<div class="stat"><small>Red / Black</small><strong id="rb">0 / 0</strong></div>
+<div class="stat"><small>Odd / Even</small><strong id="oe">0 / 0</strong></div>
+<div class="stat"><small>High / Low</small><strong id="hl">0 / 0</strong></div>
+<div class="stat"><small>Zero</small><strong id="zeros">0</strong></div>
+</div>
+</div>
 
-<section class="panel">
- <h2>HISTORICAL STATISTICS</h2>
- <div class="stats" id="stats"></div>
- <h3>Outside categories</h3>
- <div id="outside"></div>
-</section>
+<div class="panel">
+<h2>COLUMNS</h2>
+<div class="stats">
+<div class="stat"><small>Column 1</small><strong id="c1">0</strong></div>
+<div class="stat"><small>Column 2</small><strong id="c2">0</strong></div>
+<div class="stat"><small>Column 3</small><strong id="c3">0</strong></div>
+</div>
+</div>
 
-<section class="panel">
- <h2>HISTORICAL FREQUENCY</h2>
- <div id="frequency"></div>
-</section>
+<div class="panel">
+<h2>DOZENS</h2>
+<div class="stats">
+<div class="stat"><small>First Dozen</small><strong id="d1">0</strong></div>
+<div class="stat"><small>Second Dozen</small><strong id="d2">0</strong></div>
+<div class="stat"><small>Third Dozen</small><strong id="d3">0</strong></div>
+</div>
+</div>
 
-<section class="panel">
- <h2>OUTSIDE PATTERN ANALYSIS</h2>
- <p class="muted">
- Historical matches in the recorded sequence. Patterns are checked
- separately for colour, high-low and odd-even. Zero is shown separately.
- </p>
- <div id="patternAnalysis"></div>
-</section>
+<div class="panel">
+<h2>WHEEL SECTIONS</h2>
+<div class="stats">
+<div class="stat"><small>First Half (0–18)</small><strong id="wh1">0</strong></div>
+<div class="stat"><small>Second Half (19–36)</small><strong id="wh2">0</strong></div>
+</div>
+</div>
 
-<section class="panel">
- <h2>OUTSIDE PATTERN REFERENCE</h2>
- <p class="muted">Pattern notation transcribed from your reference image.</p>
- <div class="pattern"><strong>1. Zig-Zag</strong><br>R B R B R B / B R B R B R</div>
- <div class="pattern"><strong>2. Bracket</strong><br>
- R(B RR B)R / B(R BB R)B<br>
- OR R(B RRR B)R / B(R BBB R)B
- </div>
- <div class="pattern"><strong>3. Color Flow</strong><br>
- RRRRRRRR / BBBBBBBB</div>
- <div class="pattern"><strong>4. False Break (CF)</strong><br>
- Single False Break: RR B RRRRRRRR<br>
- Double False Break: BB RR BBBBBBBB
- </div>
- <div class="pattern"><strong>5. 123</strong><br>
- R(B RR BBB)R<br>
- Variation of 123: R(B R BBB)R — 113<br>
- Opposite: R(BBB RR B)R<br>
- Variation: R(BBB R B)R
- </div>
- <div class="pattern"><strong>6. Group March</strong><br>
- BB RR BB RR / RRR BBB RRR BBB<br>
- BBBB RRRR BBBB RRRR
- </div>
- <div class="pattern"><strong>7. 2×2</strong><br>BB R BB / RR B RR</div>
- <p class="muted">
- Reference note: The source says to check that the opening and closing
- colour are not the same as the pattern.
- </p>
-</section>
+<div class="panel">
+<h2>50 SPIN COMPARISON</h2>
+<div class="stats">
+<div class="stat"><small>Previous 50</small><strong id="previous50">0</strong></div>
+<div class="stat"><small>Next 50</small><strong id="next50">0</strong></div>
+<div class="stat"><small>Previous Red</small><strong id="previousRed">0</strong></div>
+<div class="stat"><small>Next Red</small><strong id="nextRed">0</strong></div>
+<div class="stat"><small>Previous Black</small><strong id="previousBlack">0</strong></div>
+<div class="stat"><small>Next Black</small><strong id="nextBlack">0</strong></div>
+</div>
+<p class="muted" id="comparisonNote">Enter at least 50 spins to compare two groups.</p>
+</div>
 
-<section class="panel">
- <h2>COMBOS</h2>
- <h3>Inside Numbers</h3>
- <div class="pattern">786 — 34-21-15 / 6-35-34</div>
- <div class="pattern">789 — 25-17-36 / 27-17-25</div>
- <div class="pattern">123 — 12-31 / 17-32</div>
- <div class="pattern">143 — 6-22-21 / 30-31-33</div>
- <div class="pattern">100 — 24-0-19 / 5-14-33</div>
+<div class="panel">
+<h2>SPIN HISTORY</h2>
+<div class="history" id="history"></div>
+</div>
 
- <h3>Casino</h3>
- <div class="pattern">2/21 — 2-7 group + 21 real face (11-21)</div>
- <div class="pattern">2/22 — 2-7 group + 22 real face (11-22)</div>
- <div class="pattern">34/12 — 34 and 12 real face (34-21)</div>
- <div class="pattern">7/17 — 2-7 group + 17 real face (7-17)</div>
- <div class="pattern">31/17 — 31 and 17 real face (13-17)</div>
- <div class="pattern">6/8 — 1-6 group + 3-8 group (1-35)</div>
- <div class="pattern">5/8 — 5-0-10 group + 3-8 group (10-35)</div>
- <div class="pattern">9/11 — 4-9 group + 11 real face (11-22)</div>
-
- <h3>Indian</h3>
- <div class="pattern">6 / 16 / 26</div>
- <div class="pattern">4 / 14 / 24</div>
- <div class="pattern">22 / 27 / 24 / 29</div>
-</section>
-
-<section class="panel">
- <h2>FON PATTERN REFERENCE</h2>
- <div class="pattern"><strong>Repeating:</strong> 55555<br>Examples: 5, 10, 23, 32, 14</div>
- <div class="pattern"><strong>1 Cut Repeating:</strong> 5*5*5*5<br>Examples: 14, 34, 5, 33, 10</div>
- <div class="pattern"><strong>Bracket:</strong> 5**5 / 5***5<br>Examples: 23, 31, 24, 14</div>
- <div class="pattern"><strong>1:2:1</strong><br>Pattern details need confirmation from your original reference.</div>
-</section>
-
-<section class="panel">
- <h2>ABOUT THIS ANALYSIS</h2>
- <p class="muted">
- SpinLab records past roulette results and calculates historical
- frequencies and pattern matches. Each spin is independent.
- Historical streaks and patterns do not establish what will happen next.
- </p>
-</section>
-</main>
-
-<footer>SPINLAB PREMIUM · HISTORY ANALYSIS</footer>
+<footer>SPINLAB PREMIUM · STATISTICAL ANALYSIS ONLY</footer>
+</div>
 
 <script>
-const redNumbers=[
- 1,3,5,7,9,12,14,16,18,
- 19,21,23,25,27,30,32,34,36
+"use strict";
+
+// =====================================
+// MAIN SPIN HISTORY
+// =====================================
+
+let spins = [];
+
+const redNumbers = [
+1,3,5,7,9,12,14,16,18,
+19,21,23,25,27,30,32,34,36
 ];
-let results=[];
 
-function colour(n){
- if(n===0)return "green";
- return redNumbers.includes(n)?"red":"black";
-}
-function buildTable(){
- const box=document.getElementById("roulette");
- let html='<button class="num zero" onclick="addResult(0)">0</button>';
- for(let n=1;n<=36;n++){
-  html+=`<button class="num ${colour(n)}" onclick="addResult(${n})">${n}</button>`;
+const wheelOrder = [
+0,32,15,19,4,21,2,25,17,34,6,27,
+13,36,11,30,8,23,10,5,24,16,33,1,
+20,14,31,9,22,18,29,7,28,12,35,3,26
+];
+
+// =====================================
+// HIDDEN FON ENGINE
+// =====================================
+
+const FON_ENGINE = {
+ enabled:true,
+ results:[],
+ history:[],
+
+ getFace(n){
+  return {
+   number:n,
+   lastDigit:n%10,
+   digitSum:String(n).split("")
+    .reduce((a,b)=>a+Number(b),0),
+   group:Math.floor(n/10),
+   color:n===0?"Green":
+    redNumbers.includes(n)?"Red":"Black",
+   parity:n===0?"Zero":
+    n%2===0?"Even":"Odd",
+   dozen:n===0?0:Math.ceil(n/12),
+   column:n===0?0:(n-1)%3+1,
+   wheelPosition:wheelOrder.indexOf(n)
+  };
+ },
+
+ analyze(data){
+  this.results=data.map((n,i)=>({
+   ...this.getFace(n),
+   position:i
+  }));
+
+  this.history=this.results.slice(-50);
+
+  return this.results;
+ },
+
+ summary(){
+  return {
+   total:this.results.length,
+   faces:this.history,
+   lastDigits:this.history.map(x=>x.lastDigit)
+  };
  }
- box.innerHTML=html;
+};
+
+// =====================================
+// HIDDEN PATTERN ENGINE
+// =====================================
+
+const PATTERN_ENGINE = {
+ enabled:true,
+ results:{},
+
+ analyze(data){
+  const digits=data.map(n=>n%10);
+
+  this.results={
+   repeating:[],
+   oneCut:[],
+   brackets:[],
+   ratio121:[],
+   lastDigits:digits
+  };
+
+  for(let i=0;i<digits.length-4;i++){
+   const a=digits.slice(i,i+5);
+
+   if(a.every(x=>x===a[0])){
+    this.results.repeating.push({index:i,values:a});
+   }
+
+   if(a[0]===a[2]&&a[2]===a[4]&&
+      a[1]!==a[0]&&a[3]!==a[0]){
+    this.results.oneCut.push({index:i,values:a});
+   }
+
+   if(a[0]===a[4]){
+    this.results.brackets.push({index:i,values:a});
+   }
+
+   if(a[0]===a[2]&&a[2]===a[3]&&a[1]!==a[0]){
+    this.results.ratio121.push({index:i,values:a});
+   }
+  }
+
+  return this.results;
+ }
+};
+
+window.SpinLabFON=FON_ENGINE;
+window.SpinLabPatterns=PATTERN_ENGINE;
+
+// =====================================
+// NUMBER TABLE
+// =====================================
+
+const table=document.getElementById("numberTable");
+
+for(let n=0;n<=36;n++){
+ const btn=document.createElement("button");
+
+ btn.textContent=n;
+ btn.className="num "+(
+  n===0?"zero":
+  redNumbers.includes(n)?"red":"black"
+ );
+
+ btn.onclick=()=>addSpin(n);
+ table.appendChild(btn);
 }
-function addResult(n){
- results.push(n);
- render();
+
+// =====================================
+// ADD AND REMOVE RESULTS
+// =====================================
+
+function addSpin(n){
+ spins.push(n);
+ updateAll();
 }
+
 function undo(){
- results.pop();
- render();
+ spins.pop();
+ updateAll();
 }
-function clearHistory(){
- if(confirm("Clear all recorded results?")){
-  results=[];
-  render();
+
+function resetAll(){
+ if(confirm("Delete all spin history?")){
+  spins=[];
+  updateAll();
  }
 }
-function pct(a,b){
- return b?((a/b)*100).toFixed(1)+"%":"0%";
+
+// =====================================
+// STATISTICS
+// =====================================
+
+function count(arr,fn){
+ return arr.filter(fn).length;
 }
-function render(){
- document.getElementById("total").textContent=
- "Total recorded: "+results.length;
 
- document.getElementById("history").innerHTML=
- results.slice().reverse().map(n=>
- `<span class="ball ${colour(n)}">${n}</span>`
- ).join("");
+function updateAll(){
+ FON_ENGINE.analyze(spins);
+ PATTERN_ENGINE.analyze(spins);
 
- const total=results.length;
- const red=results.filter(n=>colour(n)==="red").length;
- const black=results.filter(n=>colour(n)==="black").length;
- const zero=results.filter(n=>n===0).length;
- const low=results.filter(n=>n>=1&&n<=18).length;
- const high=results.filter(n=>n>=19&&n<=36).length;
- const odd=results.filter(n=>n!==0&&n%2===1).length;
- const even=results.filter(n=>n!==0&&n%2===0).length;
+ const red=count(spins,n=>redNumbers.includes(n));
+ const black=count(spins,n=>n!==0&&!redNumbers.includes(n));
+ const odd=count(spins,n=>n!==0&&n%2===1);
+ const even=count(spins,n=>n!==0&&n%2===0);
 
- const cards=[
- ["Red",red],["Black",black],["Green / Zero",zero],
- ["1–18",low],["19–36",high],["Odd",odd],["Even",even]
- ];
- document.getElementById("stats").innerHTML=cards.map(x=>
- `<div class="stat"><small>${x[0]}</small>
- <strong>${x[1]}</strong><small>${pct(x[1],total)}</small></div>`
- ).join("");
+ document.getElementById("total").textContent=spins.length;
+ document.getElementById("last").textContent=
+  spins.length?spins[spins.length-1]:"-";
 
- document.getElementById("outside").innerHTML=[
- ["Red",red],["Black",black],["1–18",low],
- ["19–36",high],["Odd",odd],["Even",even],["Zero",zero]
- ].map(x=>`<div class="row"><span>${x[0]}</span>
- <strong>${x[1]} · ${pct(x[1],total)}</strong></div>`).join("");
+ document.getElementById("rb").textContent=red+" / "+black;
+ document.getElementById("oe").textContent=odd+" / "+even;
 
- const freq=[];
- for(let n=0;n<=36;n++){
-  freq.push({n,count:results.filter(x=>x===n).length});
+ document.getElementById("hl").textContent=
+  count(spins,n=>n>=19)+" / "+count(spins,n=>n>=1&&n<=18);
+
+ document.getElementById("zeros").textContent=
+  count(spins,n=>n===0);
+
+ for(let c=1;c<=3;c++){
+  document.getElementById("c"+c).textContent=
+   count(spins,n=>n!==0&&(n-1)%3+1===c);
  }
- freq.sort((a,b)=>b.count-a.count||a.n-b.n);
- document.getElementById("frequency").innerHTML=
- freq.map(x=>`<div class="row">
- <span>${x.n} (${colour(x.n)})</span><strong>${x.count}</strong>
- </div>`).join("");
 
- renderPatterns();
+ for(let d=1;d<=3;d++){
+  document.getElementById("d"+d).textContent=
+   count(spins,n=>n!==0&&Math.ceil(n/12)===d);
+ }
+
+ document.getElementById("wh1").textContent=
+  count(spins,n=>n<=18);
+
+ document.getElementById("wh2").textContent=
+  count(spins,n=>n>=19);
+
+ updateComparison();
+ updateHistory();
 }
-function sequence(type){
- return results.map(n=>{
-  if(type==="colour"){
-   return n===0?"0":colour(n)==="red"?"R":"B";
-  }
-  if(type==="highlow"){
-   return n===0?"0":n<=18?"L":"H";
-  }
-  return n===0?"0":n%2===1?"O":"E";
+
+// =====================================
+// 50 SPIN COMPARISON
+// =====================================
+
+function updateComparison(){
+ const first=spins.slice(0,50);
+ const second=spins.slice(50,100);
+
+ document.getElementById("previous50").textContent=first.length;
+ document.getElementById("next50").textContent=second.length;
+
+ document.getElementById("previousRed").textContent=
+  count(first,n=>redNumbers.includes(n));
+
+ document.getElementById("nextRed").textContent=
+  count(second,n=>redNumbers.includes(n));
+
+ document.getElementById("previousBlack").textContent=
+  count(first,n=>n!==0&&!redNumbers.includes(n));
+
+ document.getElementById("nextBlack").textContent=
+  count(second,n=>n!==0&&!redNumbers.includes(n));
+
+ document.getElementById("comparisonNote").textContent=
+  second.length===50?
+  "Both 50-spin groups are complete. Compare their observed distributions.":
+  "Waiting for "+(100-spins.length>0?100-spins.length:0)+
+  " more spins to complete the comparison.";
+}
+
+// =====================================
+// HISTORY
+// =====================================
+
+function updateHistory(){
+ const area=document.getElementById("history");
+ area.innerHTML="";
+
+ spins.slice().reverse().forEach(n=>{
+  const span=document.createElement("span");
+  span.textContent=n;
+  span.className=
+   n===0?"zero":
+   redNumbers.includes(n)?"red":"black";
+  area.appendChild(span);
  });
 }
-function renderPatterns(){
- const patterns=[
-  {name:"Zig-Zag",seq:["RBRBRB","BRBRBR"]},
-  {name:"Bracket",seq:["RBRRBR","BRBBRB","RBRRRBR","BRBBBRB"]},
-  {name:"Color Flow",seq:["RRRRRRRR","BBBBBBBB"]},
-  {name:"Single False Break",seq:["RRBRRRRRRR"]},
-  {name:"Double False Break",seq:["BBRRBBBBBBBB"]},
-  {name:"123",seq:["RBRRBBBR","RBRBBBR","RBBBRRBR","RBBBRBR"]},
-  {name:"Group March",seq:["BBRRBBRR","RRRBBBRRRBBB","BBBBRRRRBBBBRRRR"]},
-  {name:"2×2",seq:["BBRBB","RRBRR"]}
+
+// =====================================
+// EXPORT CSV
+// =====================================
+
+function exportData(){
+ const rows=[
+  ["Spin","Number","Last Digit","Color","Odd/Even","Dozen","Column"]
  ];
- const dimensions=[
-  ["Colour","colour","R = Red, B = Black"],
-  ["High–Low","highlow","L = 1–18, H = 19–36"],
-  ["Odd–Even","oddeven","O = Odd, E = Even"]
- ];
- let html="";
- dimensions.forEach(([label,type,legend])=>{
-  const seq=sequence(type);
-  html+=`<h3>${label}</h3><p class="muted">${legend}. Zero breaks a sequence.</p>`;
-  patterns.forEach(p=>{
-   let count=0;
-   p.seq.forEach(pattern=>{
-    for(let i=0;i<=seq.length-pattern.length;i++){
-     if(seq.slice(i,i+pattern.length).join("")===pattern)count++;
-    }
-   });
-   html+=`<div class="row"><span>${p.name}</span>
-   <strong>${count} exact matches</strong></div>`;
-  });
+
+ spins.forEach((n,i)=>{
+  const f=FON_ENGINE.getFace(n);
+  rows.push([
+   i+1,n,f.lastDigit,f.color,
+   f.parity,f.dozen,f.column
+  ]);
  });
- document.getElementById("patternAnalysis").innerHTML=html;
-}
-function exportCSV(){
- if(!results.length){alert("No results to export.");return;}
- const content="Number\n"+results.join("\n");
- const blob=new Blob([content],{type:"text/csv"});
+
+ const csv=rows.map(r=>r.join(",")).join("\n");
+ const blob=new Blob([csv],{type:"text/csv"});
  const url=URL.createObjectURL(blob);
  const a=document.createElement("a");
- a.href=url;a.download="spinlab-history.csv";a.click();
+
+ a.href=url;
+ a.download="spinlab-history.csv";
+ a.click();
+
  URL.revokeObjectURL(url);
 }
-function importCSV(event){
- const file=event.target.files[0];
- if(!file)return;
- const reader=new FileReader();
- reader.onload=()=>{
-  const nums=reader.result.match(/\d+/g)||[];
-  const valid=nums.map(Number).filter(n=>n>=0&&n<=36);
-  results=results.concat(valid);
-  render();
-  alert(valid.length+" results imported.");
-  event.target.value="";
- };
- reader.readAsText(file);
-}
-buildTable();
-render();
+
+// INITIALIZE
+updateAll();
+
 </script>
 </body>
 </html>
