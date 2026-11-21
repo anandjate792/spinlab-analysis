@@ -3,75 +3,84 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#101411">
 <title>SpinLab Premium</title>
 <style>
-:root {
+:root{
  --bg:#0b0e0c;--panel:#151b17;--panel2:#1c241e;
- --line:#303b32;--text:#f1f5ef;--muted:#9aa99d;
- --gold:#d6b66b;--green:#267c4b;--red:#bd4141;
+ --line:#303b32;--text:#f1f5f1;--muted:#9aa99d;
+ --gold:#d6b66b;--green:#267c4b;--red:#a83232;
 }
 *{box-sizing:border-box}
 body{
  margin:0;background:var(--bg);color:var(--text);
- font-family:Arial,sans-serif;padding:16px;
+ font-family:Arial,sans-serif;padding-bottom:30px
 }
-header{padding:12px 0 20px}
+header{padding:22px 16px 12px}
 h1{margin:0;color:var(--gold);font-size:27px;letter-spacing:2px}
 .sub{color:var(--muted);font-size:12px;margin-top:7px}
+main{padding:0 12px;max-width:850px;margin:auto}
 .panel{
  background:var(--panel);border:1px solid var(--line);
- border-radius:14px;padding:15px;margin-bottom:15px;
+ border-radius:14px;padding:14px;margin:12px 0
 }
-h2{font-size:15px;color:var(--gold);margin:0 0 13px}
-h3{font-size:13px;margin:13px 0 8px;color:var(--gold)}
+h2{font-size:15px;color:var(--gold);margin:0 0 12px}
+h3{font-size:13px;color:var(--gold);margin:15px 0 8px}
+.muted{color:var(--muted);font-size:12px;line-height:1.5}
 button{
  background:var(--panel2);color:var(--text);
  border:1px solid var(--line);border-radius:9px;
- padding:10px 12px;font-weight:bold;cursor:pointer;
+ padding:10px 12px;font-weight:bold;cursor:pointer
 }
 button:active{opacity:.7}
 .actions{display:flex;gap:8px;flex-wrap:wrap}
 .table{
- display:grid;grid-template-columns:repeat(6,1fr);gap:5px;
+ display:grid;grid-template-columns:repeat(6,1fr);gap:6px
 }
-.num{padding:13px 2px;font-size:14px}
+.num{
+ padding:13px 2px;font-size:14px;border-radius:8px;
+ border:1px solid #ffffff20;font-weight:bold
+}
 .zero{background:var(--green);grid-column:span 6}
-.red{background:#9e3333}
+.red{background:#a83232}
 .black{background:#252a27}
 .history{display:flex;flex-wrap:wrap;gap:6px}
 .ball{
  width:34px;height:34px;border-radius:50%;
  display:grid;place-items:center;font-weight:bold;
- border:1px solid #ffffff22;
+ border:1px solid #ffffff55;font-size:12px
 }
 .ball.green{background:var(--green)}
 .ball.red{background:var(--red)}
 .ball.black{background:#252a27}
-.stats{
- display:grid;grid-template-columns:repeat(2,1fr);gap:9px;
-}
+.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
 .stat{background:var(--panel2);padding:12px;border-radius:10px}
-.stat small{display:block;color:var(--muted);margin-bottom:6px}
-.stat strong{font-size:21px;color:var(--gold)}
-.muted{color:var(--muted);font-size:12px}
-.row{display:flex;justify-content:space-between;gap:10px;margin:9px 0}
-.bar{height:7px;background:#29332c;border-radius:8px;overflow:hidden}
-.fill{height:100%;background:var(--gold)}
-.combo{padding:10px 0;border-bottom:1px solid var(--line)}
-.combo:last-child{border:0}
+.stat small{display:block;color:var(--muted)}
+.stat strong{display:block;font-size:20px;color:var(--gold);margin-top:5px}
+.row{
+ display:flex;justify-content:space-between;gap:10px;
+ padding:8px 0;border-bottom:1px solid var(--line);font-size:13px
+}
+.row:last-child{border:0}
+.tag{
+ display:inline-block;padding:5px 8px;border-radius:7px;
+ background:var(--panel2);margin:3px;font-size:12px
+}
+.pattern{padding:10px 0;border-bottom:1px solid var(--line)}
+.pattern:last-child{border:0}
+.pattern strong{color:var(--gold)}
 input[type=file]{max-width:100%;color:var(--muted)}
 footer{text-align:center;color:var(--muted);font-size:11px;padding:20px}
 </style>
 </head>
 <body>
-
 <header>
  <h1>SPINLAB</h1>
- <div class="sub">PREMIUM ROULETTE HISTORY ANALYZER</div>
+ <div class="sub">PREMIUM ROULETTE HISTORY ANALYSER</div>
 </header>
 
+<main>
 <section class="panel">
  <h2>EUROPEAN ROULETTE TABLE</h2>
  <div class="table" id="roulette"></div>
@@ -81,228 +90,261 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:20px}
 <section class="panel">
  <h2>HISTORY CONTROLS</h2>
  <div class="actions">
-  <button onclick="undo()">UNDO LAST</button>
+  <button onclick="undo()">UNDO</button>
   <button onclick="clearHistory()">CLEAR HISTORY</button>
   <button onclick="exportCSV()">EXPORT CSV</button>
  </div>
- <h3>IMPORT CSV</h3>
- <input type="file" accept=".csv,.txt" onchange="importCSV(event)">
- <h3>RECENT RESULTS</h3>
+ <p class="muted" id="total">Total recorded: 0</p>
  <div class="history" id="history"></div>
- <p class="muted" id="count">0 recorded results</p>
+ <p class="muted">Import previous results:</p>
+ <input type="file" accept=".csv,.txt" onchange="importCSV(event)">
 </section>
 
 <section class="panel">
  <h2>HISTORICAL STATISTICS</h2>
- <div class="stats">
-  <div class="stat"><small>Total results</small><strong id="total">0</strong></div>
-  <div class="stat"><small>Zero results</small><strong id="zeros">0</strong></div>
-  <div class="stat"><small>Red results</small><strong id="reds">0</strong></div>
-  <div class="stat"><small>Black results</small><strong id="blacks">0</strong></div>
- </div>
- <h3>OUTSIDE CATEGORIES</h3>
+ <div class="stats" id="stats"></div>
+ <h3>Outside categories</h3>
  <div id="outside"></div>
 </section>
 
 <section class="panel">
- <h2>NUMBER FREQUENCY</h2>
+ <h2>HISTORICAL FREQUENCY</h2>
  <div id="frequency"></div>
 </section>
 
 <section class="panel">
+ <h2>OUTSIDE PATTERN ANALYSIS</h2>
+ <p class="muted">
+ Historical matches in the recorded sequence. Patterns are checked
+ separately for colour, high-low and odd-even. Zero is shown separately.
+ </p>
+ <div id="patternAnalysis"></div>
+</section>
+
+<section class="panel">
+ <h2>OUTSIDE PATTERN REFERENCE</h2>
+ <p class="muted">Pattern notation transcribed from your reference image.</p>
+ <div class="pattern"><strong>1. Zig-Zag</strong><br>R B R B R B / B R B R B R</div>
+ <div class="pattern"><strong>2. Bracket</strong><br>
+ R(B RR B)R / B(R BB R)B<br>
+ OR R(B RRR B)R / B(R BBB R)B
+ </div>
+ <div class="pattern"><strong>3. Color Flow</strong><br>
+ RRRRRRRR / BBBBBBBB</div>
+ <div class="pattern"><strong>4. False Break (CF)</strong><br>
+ Single False Break: RR B RRRRRRRR<br>
+ Double False Break: BB RR BBBBBBBB
+ </div>
+ <div class="pattern"><strong>5. 123</strong><br>
+ R(B RR BBB)R<br>
+ Variation of 123: R(B R BBB)R — 113<br>
+ Opposite: R(BBB RR B)R<br>
+ Variation: R(BBB R B)R
+ </div>
+ <div class="pattern"><strong>6. Group March</strong><br>
+ BB RR BB RR / RRR BBB RRR BBB<br>
+ BBBB RRRR BBBB RRRR
+ </div>
+ <div class="pattern"><strong>7. 2×2</strong><br>BB R BB / RR B RR</div>
+ <p class="muted">
+ Reference note: The source says to check that the opening and closing
+ colour are not the same as the pattern.
+ </p>
+</section>
+
+<section class="panel">
  <h2>COMBOS</h2>
- <h3>INSIDE NUMBERS</h3>
- <div id="inside"></div>
- <h3>CASINO COMBOS</h3>
- <div id="casino"></div>
- <h3>INDIAN COMBOS</h3>
- <div id="indian"></div>
+ <h3>Inside Numbers</h3>
+ <div class="pattern">786 — 34-21-15 / 6-35-34</div>
+ <div class="pattern">789 — 25-17-36 / 27-17-25</div>
+ <div class="pattern">123 — 12-31 / 17-32</div>
+ <div class="pattern">143 — 6-22-21 / 30-31-33</div>
+ <div class="pattern">100 — 24-0-19 / 5-14-33</div>
+
+ <h3>Casino</h3>
+ <div class="pattern">2/21 — 2-7 group + 21 real face (11-21)</div>
+ <div class="pattern">2/22 — 2-7 group + 22 real face (11-22)</div>
+ <div class="pattern">34/12 — 34 and 12 real face (34-21)</div>
+ <div class="pattern">7/17 — 2-7 group + 17 real face (7-17)</div>
+ <div class="pattern">31/17 — 31 and 17 real face (13-17)</div>
+ <div class="pattern">6/8 — 1-6 group + 3-8 group (1-35)</div>
+ <div class="pattern">5/8 — 5-0-10 group + 3-8 group (10-35)</div>
+ <div class="pattern">9/11 — 4-9 group + 11 real face (11-22)</div>
+
+ <h3>Indian</h3>
+ <div class="pattern">6 / 16 / 26</div>
+ <div class="pattern">4 / 14 / 24</div>
+ <div class="pattern">22 / 27 / 24 / 29</div>
 </section>
 
 <section class="panel">
  <h2>FON PATTERN REFERENCE</h2>
- <div id="fon"></div>
+ <div class="pattern"><strong>Repeating:</strong> 55555<br>Examples: 5, 10, 23, 32, 14</div>
+ <div class="pattern"><strong>1 Cut Repeating:</strong> 5*5*5*5<br>Examples: 14, 34, 5, 33, 10</div>
+ <div class="pattern"><strong>Bracket:</strong> 5**5 / 5***5<br>Examples: 23, 31, 24, 14</div>
+ <div class="pattern"><strong>1:2:1</strong><br>Pattern details need confirmation from your original reference.</div>
 </section>
 
-<footer>
- SPINLAB PREMIUM · HISTORICAL RECORDS ONLY<br>
- Past results do not determine future roulette outcomes.
-</footer>
+<section class="panel">
+ <h2>ABOUT THIS ANALYSIS</h2>
+ <p class="muted">
+ SpinLab records past roulette results and calculates historical
+ frequencies and pattern matches. Each spin is independent.
+ Historical streaks and patterns do not establish what will happen next.
+ </p>
+</section>
+</main>
+
+<footer>SPINLAB PREMIUM · HISTORY ANALYSIS</footer>
 
 <script>
 const redNumbers=[
  1,3,5,7,9,12,14,16,18,
  19,21,23,25,27,30,32,34,36
 ];
-
 let results=[];
 
 function colour(n){
  if(n===0)return "green";
  return redNumbers.includes(n)?"red":"black";
 }
-
 function buildTable(){
- const table=document.getElementById("roulette");
- const zero=document.createElement("button");
- zero.className="num zero";
- zero.textContent="0";
- zero.onclick=()=>addResult(0);
- table.appendChild(zero);
-
+ const box=document.getElementById("roulette");
+ let html='<button class="num zero" onclick="addResult(0)">0</button>';
  for(let n=1;n<=36;n++){
-  const b=document.createElement("button");
-  b.className="num "+colour(n);
-  b.textContent=n;
-  b.onclick=()=>addResult(n);
-  table.appendChild(b);
+  html+=`<button class="num ${colour(n)}" onclick="addResult(${n})">${n}</button>`;
  }
+ box.innerHTML=html;
 }
-
 function addResult(n){
  results.push(n);
  render();
 }
-
 function undo(){
  results.pop();
  render();
 }
-
 function clearHistory(){
  if(confirm("Clear all recorded results?")){
   results=[];
   render();
  }
 }
-
-function percentage(a,total){
- return total?((a/total)*100).toFixed(1)+"%":"0%";
+function pct(a,b){
+ return b?((a/b)*100).toFixed(1)+"%":"0%";
 }
-
 function render(){
- const total=results.length;
- const reds=results.filter(n=>colour(n)==="red").length;
- const blacks=results.filter(n=>colour(n)==="black").length;
- const zeros=results.filter(n=>n===0).length;
-
- document.getElementById("total").textContent=total;
- document.getElementById("reds").textContent=reds;
- document.getElementById("blacks").textContent=blacks;
- document.getElementById("zeros").textContent=zeros;
- document.getElementById("count").textContent=
-  total+" recorded results";
+ document.getElementById("total").textContent=
+ "Total recorded: "+results.length;
 
  document.getElementById("history").innerHTML=
-  results.slice().reverse().map(n=>
-   `<span class="ball ${colour(n)}">${n}</span>`
-  ).join("");
+ results.slice().reverse().map(n=>
+ `<span class="ball ${colour(n)}">${n}</span>`
+ ).join("");
 
- const categories=[
-  ["Red",reds],["Black",blacks],
-  ["Odd",results.filter(n=>n!==0&&n%2===1).length],
-  ["Even",results.filter(n=>n!==0&&n%2===0).length],
-  ["1–18",results.filter(n=>n>=1&&n<=18).length],
-  ["19–36",results.filter(n=>n>=19&&n<=36).length],
-  ["Zero",zeros]
+ const total=results.length;
+ const red=results.filter(n=>colour(n)==="red").length;
+ const black=results.filter(n=>colour(n)==="black").length;
+ const zero=results.filter(n=>n===0).length;
+ const low=results.filter(n=>n>=1&&n<=18).length;
+ const high=results.filter(n=>n>=19&&n<=36).length;
+ const odd=results.filter(n=>n!==0&&n%2===1).length;
+ const even=results.filter(n=>n!==0&&n%2===0).length;
+
+ const cards=[
+ ["Red",red],["Black",black],["Green / Zero",zero],
+ ["1–18",low],["19–36",high],["Odd",odd],["Even",even]
  ];
+ document.getElementById("stats").innerHTML=cards.map(x=>
+ `<div class="stat"><small>${x[0]}</small>
+ <strong>${x[1]}</strong><small>${pct(x[1],total)}</small></div>`
+ ).join("");
 
- document.getElementById("outside").innerHTML=
- categories.map(([name,count])=>`
- <div class="row">
-  <span>${name}</span>
-  <strong>${count} · ${percentage(count,total)}</strong>
- </div>
- <div class="bar"><div class="fill" style="width:${percentage(count,total)}"></div></div>
- `).join("");
+ document.getElementById("outside").innerHTML=[
+ ["Red",red],["Black",black],["1–18",low],
+ ["19–36",high],["Odd",odd],["Even",even],["Zero",zero]
+ ].map(x=>`<div class="row"><span>${x[0]}</span>
+ <strong>${x[1]} · ${pct(x[1],total)}</strong></div>`).join("");
 
- let freq=[];
+ const freq=[];
  for(let n=0;n<=36;n++){
-  const count=results.filter(x=>x===n).length;
-  freq.push({n,count});
+  freq.push({n,count:results.filter(x=>x===n).length});
  }
  freq.sort((a,b)=>b.count-a.count||a.n-b.n);
-
  document.getElementById("frequency").innerHTML=
- freq.map(x=>`
- <div class="row">
-  <span>${x.n} (${colour(x.n)})</span>
-  <strong>${x.count}</strong>
- </div>
- `).join("");
+ freq.map(x=>`<div class="row">
+ <span>${x.n} (${colour(x.n)})</span><strong>${x.count}</strong>
+ </div>`).join("");
+
+ renderPatterns();
 }
-
-const inside=[
- ["786","34-21-15 / 6-35-34"],
- ["789","25-17-36 / 27-17-25"],
- ["123","12-31 / 17-32"],
- ["143","6-22-21 / 30-31-33"],
- ["100","24-0-19 / 5-14-33"]
-];
-
-const casino=[
- ["2/21","2-7 group + 21 real face (11-21)"],
- ["2/22","2-7 group + 22 real face (11-22)"],
- ["34/12","34 and 12 real face (34-21)"],
- ["7/17","2-7 group + 17 real face (7-17)"],
- ["31/17","31 and 17 real face (13-17)"],
- ["6/8","1-6 group + 3-8 group (1-35)"],
- ["5/8","5-0-10 group + 3-8 group (10-35)"],
- ["9/11","4-9 group + 11 real face (11-22)"]
-];
-
-const indian=[
- ["6/16/26","6, 16, 26"],
- ["4/14/24","4, 14, 24"],
- ["22/27/24/29","22, 27, 24, 29"]
-];
-
-function showList(id,list){
- document.getElementById(id).innerHTML=list.map(
-  ([name,description])=>`
-   <div class="combo">
-    <strong>${name}</strong>
-    <div class="muted">${description}</div>
-   </div>`
- ).join("");
+function sequence(type){
+ return results.map(n=>{
+  if(type==="colour"){
+   return n===0?"0":colour(n)==="red"?"R":"B";
+  }
+  if(type==="highlow"){
+   return n===0?"0":n<=18?"L":"H";
+  }
+  return n===0?"0":n%2===1?"O":"E";
+ });
 }
-
-showList("inside",inside);
-showList("casino",casino);
-showList("indian",indian);
-
-const fon=[
- ["Repeating","55555","5, 10, 23, 32, 14"],
- ["1 Cut Repeating","5*5*5*5","14, 34, 5, 33, 10"],
- ["Bracket","5**5 / 5***5","23, 31, 24, 14"],
- ["1:2:1","5*5**5","See original pattern examples"]
-];
-
-showList("fon",fon);
-
+function renderPatterns(){
+ const patterns=[
+  {name:"Zig-Zag",seq:["RBRBRB","BRBRBR"]},
+  {name:"Bracket",seq:["RBRRBR","BRBBRB","RBRRRBR","BRBBBRB"]},
+  {name:"Color Flow",seq:["RRRRRRRR","BBBBBBBB"]},
+  {name:"Single False Break",seq:["RRBRRRRRRR"]},
+  {name:"Double False Break",seq:["BBRRBBBBBBBB"]},
+  {name:"123",seq:["RBRRBBBR","RBRBBBR","RBBBRRBR","RBBBRBR"]},
+  {name:"Group March",seq:["BBRRBBRR","RRRBBBRRRBBB","BBBBRRRRBBBBRRRR"]},
+  {name:"2×2",seq:["BBRBB","RRBRR"]}
+ ];
+ const dimensions=[
+  ["Colour","colour","R = Red, B = Black"],
+  ["High–Low","highlow","L = 1–18, H = 19–36"],
+  ["Odd–Even","oddeven","O = Odd, E = Even"]
+ ];
+ let html="";
+ dimensions.forEach(([label,type,legend])=>{
+  const seq=sequence(type);
+  html+=`<h3>${label}</h3><p class="muted">${legend}. Zero breaks a sequence.</p>`;
+  patterns.forEach(p=>{
+   let count=0;
+   p.seq.forEach(pattern=>{
+    for(let i=0;i<=seq.length-pattern.length;i++){
+     if(seq.slice(i,i+pattern.length).join("")===pattern)count++;
+    }
+   });
+   html+=`<div class="row"><span>${p.name}</span>
+   <strong>${count} exact matches</strong></div>`;
+  });
+ });
+ document.getElementById("patternAnalysis").innerHTML=html;
+}
 function exportCSV(){
- const csv="Result\n"+results.join("\n");
- const blob=new Blob([csv],{type:"text/csv"});
+ if(!results.length){alert("No results to export.");return;}
+ const content="Number\n"+results.join("\n");
+ const blob=new Blob([content],{type:"text/csv"});
  const url=URL.createObjectURL(blob);
  const a=document.createElement("a");
- a.href=url;
- a.download="spinlab-history.csv";
- a.click();
+ a.href=url;a.download="spinlab-history.csv";a.click();
  URL.revokeObjectURL(url);
 }
-
 function importCSV(event){
  const file=event.target.files[0];
  if(!file)return;
  const reader=new FileReader();
  reader.onload=()=>{
-  const nums=reader.result.match(/\b(?:[0-9]|[12][0-9]|3[0-6])\b/g)||[];
-  results=nums.map(Number);
+  const nums=reader.result.match(/\d+/g)||[];
+  const valid=nums.map(Number).filter(n=>n>=0&&n<=36);
+  results=results.concat(valid);
   render();
+  alert(valid.length+" results imported.");
+  event.target.value="";
  };
  reader.readAsText(file);
 }
-
 buildTable();
 render();
 </script>
